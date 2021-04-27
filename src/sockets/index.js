@@ -1,5 +1,7 @@
-const handleConnection = (client) => {
-    console.log(`New Connection ${client.id}`);
-};
+const walletSocketsService = require('./wallet-sockets');
+const tradeChannelsSocketsService = require('./tradeChannels-sockets');
 
-module.exports = { handleConnection };
+module.exports = {
+    walletSocketsService,
+    tradeChannelsSocketsService,
+};

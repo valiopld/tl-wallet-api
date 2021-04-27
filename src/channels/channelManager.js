@@ -1,5 +1,6 @@
-const channelManager = {};
+const models = require('../db/models');
 
+const channelManager = {};
 
 channelManager.getCounterparties = () => {
     // get All counterparties
