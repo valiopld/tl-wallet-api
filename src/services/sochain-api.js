@@ -1,5 +1,5 @@
 const axios = require('axios');
-const config = require('../config/env.config');
+const config = require('../../config/env.config');
 
 const NETWORK = config.NETWORK;
 const baseURL = 'https://sochain.com/api/v2/';

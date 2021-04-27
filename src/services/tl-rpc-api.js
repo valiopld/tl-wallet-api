@@ -1,4 +1,4 @@
-const litecoin = require('../config/litecoin.config');
+const litecoin = require('../../config/litecoin.config');
 
 const asyncClient = async (...args) => 
 (await new Promise((resolve, reject) => {
