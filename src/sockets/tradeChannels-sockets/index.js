@@ -4,12 +4,11 @@ const handleConnection = (client) => {
     console.log(`New Counterparty connection - socket ID: ${client.id}`);
     const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
     channelManager.addCounterparty(ip);
-    // channelManager.getCounterparties();
 
     client.on('disconnect', () => {
         console.log(`Counterparty disconnected. socket ID: ${client.id}`);
         channelManager.disconnectCounterperty(ip);
-    })
+    });
 };
 
 const connect = () => {
