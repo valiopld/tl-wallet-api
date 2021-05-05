@@ -1,5 +1,14 @@
+const channelManager = require('../../channels/channelManager');
 const handleConnection = (client) => {
     console.log(`New Client Connected! ID: ${client.id}`);
+
+    client.on('counterparties', async () => {
+        const counterpartiesList = await channelManager.getCounterparties(true, (res) => {
+            const { data, error } = res;
+            if (error || !data) return console.log(error || 'There is problem with listing Counterparties');
+            client.emit('counterparties', data.map(c => c.ip));
+        });
+    })
 };
 
 const connect = () => {

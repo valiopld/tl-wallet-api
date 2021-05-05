@@ -1,4 +1,5 @@
 const express = require('express');
+const { tradeBuilder } = require('../services');
 const tradeRouter = express.Router();
 
 tradeRouter.get('/newTrade', async (req, res) => {
@@ -29,7 +30,9 @@ tradeRouter.get('/cancleIoI', async (req, res) => {
 
 tradeRouter.get('/submitTrade', async (req, res) => {
     try {
-        console.log('Submit Trade')
+        const tradeInfo = req.query;
+        const result = await tradeBuilder.build(tradeInfo);
+        res.send({ data: result });
     } catch(error) {
         res.send({ error: error.message });
     }

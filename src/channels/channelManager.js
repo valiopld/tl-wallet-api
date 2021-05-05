@@ -1,11 +1,11 @@
 const dbActions = require('../db/actions');
 const channelManager = {};
 
-channelManager.getCounterparties = (onlineFilter) => {
+channelManager.getCounterparties = (onlineFilter, cb) => {
     dbActions.counterpartiesActions.getCounterparties((res) => {
         const { data, error } = res;
-        if (error || !data) return console.log(error.message);
-        return onlineFilter ? data.filter(c => c.online) : data;
+        if (error || !data) return cb({ error: error });
+        return cb({ data: onlineFilter ? data.filter(c => c.online) : data });
     })
 };
 
