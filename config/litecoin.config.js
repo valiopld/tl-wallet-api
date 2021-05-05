@@ -7,4 +7,4 @@ module.exports = new litecoin.Client({
   user: config.RPC_USER,
   pass: config.RPC_PASS,
   ssl: false,
-});;
+});

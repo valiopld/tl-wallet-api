@@ -19,4 +19,16 @@ const api = {};
 api.tl_getallbalancesforaddress = async (address) =>
     await asyncClient('tl_getallbalancesforaddress', address);
 
+
+const checkConenction = async () => {
+    const tlgiRes = await asyncClient('tl_getinfo');
+    const { error } = tlgiRes;
+    const message = error
+        ? `There is problem with LTC node connection !`
+        : `Connected to the LTC node !`;
+    console.log(message);
+};
+
+checkConenction();
+
 module.exports = api;
