@@ -7,7 +7,7 @@ counterpartiesActions.addCoutnerparty = async (counterparty, cb) => {
     try {
         const query = { ip: counterparty.ip };
         const update = { lastConnection: new Date(), online: true };
-        const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        const options = { upsert: true, new: true, setDefaultsOnInsert: true , useFindAndModify: false };
         const newCounterparty = await counterpartyModel.findOneAndUpdate(query, update, options);
         cb({ data: newCounterparty});
     } catch (error) {
@@ -19,6 +19,17 @@ counterpartiesActions.getCounterparties = async (cb) => {
     try {
         const counterparties = await counterpartyModel.find();
         cb({ data: counterparties });
+    } catch (error) {
+        cb({ error: error.message });
+    }
+};
+
+counterpartiesActions.disconnectCounterparty = async (counterparty, cb) => {
+    try {
+        const query = { ip: counterparty.ip };
+        const update = { online: false };
+        const counterpartyRes = await counterpartyModel.updateOne(query, update);
+        cb({ data: counterpartyRes});
     } catch (error) {
         cb({ error: error.message });
     }
