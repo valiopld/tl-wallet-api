@@ -25,8 +25,8 @@ channelManager.disconnectCounterperty = async (counterparty) => {
     })
 };
 
-channelManager.getChannels = () => {
-    // get All Channels
+channelManager.getChannels = async (address) => {
+    return await dbActions.channelsActions.getChannel(address);
 };
 
 channelManager.addChannel = (channel) => {

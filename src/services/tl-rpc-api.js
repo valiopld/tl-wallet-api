@@ -19,6 +19,11 @@ const api = {};
 api.tl_getallbalancesforaddress = async (address) =>
     await asyncClient('tl_getallbalancesforaddress', address);
 
+api.addmultisigaddress = async (n, pubkeysArray) =>
+    await asyncClient("addmultisigaddress", n, pubkeysArray);
+
+api.validateAddress = async (address) =>
+    await asyncClient("validateaddress", address);
 
 const checkConenction = async () => {
     const tlgiRes = await asyncClient('tl_getinfo');

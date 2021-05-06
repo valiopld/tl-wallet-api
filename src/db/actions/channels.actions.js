@@ -15,12 +15,13 @@ channelsActions.addChannel = async (channel, cb) => {
     }
 };
 
-channelsActions.getCounterparties = async (cb) => {
+channelsActions.getChannel = async (address, cb) => {
     try {
-        const channels = await channelModel.find();
-        cb({ data: channels });
+        const query = [ { 'address1': address }, { 'address2': address } ];
+        const channels = await channelModel.findOne().or(query);
+        return { data: channel };
     } catch (error) {
-        cb({ error: error.message });
+        return { error: error.message };
     }
 };
 
