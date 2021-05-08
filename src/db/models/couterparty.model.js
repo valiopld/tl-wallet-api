@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
 
+const AddressObjSchema = new mongoose.Schema({
+    address: {
+        type: String,
+        required: true,
+    },
+    publicKey: {
+        type: String,
+        required: true,
+    },
+});
+
 const counterpartySchema = new mongoose.Schema({
     ip: {
         type: String,
@@ -33,6 +44,14 @@ const counterpartySchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now,
+    },
+    addressObj: {
+        type: AddressObjSchema,
+        required: true,
+    },
+    port: {
+        type: Number,
+        required: true,
     }
 });
 

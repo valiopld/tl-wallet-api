@@ -5,8 +5,9 @@ const counterpartiesActions = {};
 
 counterpartiesActions.addCoutnerparty = async (counterparty, cb) => {
     try {
-        const query = { ip: counterparty.ip };
-        const update = { lastConnection: new Date(), online: true };
+        const { addressObj, ip, port } = counterparty;
+        const query = { ip };
+        const update = { addressObj, port, lastConnection: new Date(), online: true };
         const options = { upsert: true, new: true, setDefaultsOnInsert: true , useFindAndModify: false };
         const newCounterparty = await counterpartyModel.findOneAndUpdate(query, update, options);
         cb({ data: newCounterparty});

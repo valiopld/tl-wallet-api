@@ -7,38 +7,52 @@ const tradeTypes = {
 };
 
 const tradeBuilder = {};
-const getPubKey = async (address) => {
-    const vaRes = await tlApi.validateAddress(address);
-    const { data, error } = vaRes;
-    if (error || !data || !data.scriptPubKey ) return { error };
-    return data.scriptPubKey;
+
+const findNewDealer = async (tradeInfo) => {
+    return new Promise((res, rej) => {
+        channelManager.getCounterparties(true, (result) => {
+            const { error, data } = result;
+            if (error || !data ) return rej({ error });
+            res(data[0]);
+        })
+    })
 };
 
-const findOrCreateChannel = async (address) => {
+const findOrCreateChannel = async (tradeInfo) => {
+    const { address, publicKey } = JSON.parse(tradeInfo.address);
     const existingChannel = await channelManager.getChannels(address);
     const channelResError = existingChannel.error;
     const channelResData = existingChannel.data;
     if (!channelResError && channelResData) {
         console.log(`Existing Channel for this addreses Found!`);
-        console.log(channelResData);
+        return channelResData
     } else {
         console.log(`Not found existing Chnnale. Crating new One!`);
-        const address2 = 'QMjCWx6G85V89PYcb3msyyQvbp2RxCprEy';
-
-        const pubkey1 = await getPubKey(address);
-        const pubkey2 = await getPubKey(address2);
+        const pubkey1 = publicKey
+        
+        const dealer = await findNewDealer(tradeInfo);
+        const pubkey2 = dealer.addressObj.publicKey;
         const pubKeysArray = [ pubkey1, pubkey2 ];
-        console.log(pubKeysArray)
-        const multisigAddress = await tlApi.addmultisigaddress(2, pubKeysArray);
-        console.log({multisigAddress});
+        const multisigAddressRes = await tlApi.addmultisigaddress(2, pubKeysArray);
+        const msaData = multisigAddressRes.data;
+        const msaError = multisigAddressRes.error;
+        if (!msaData || msaError ) return;
+        const channelObj = {
+            multisig: msaData,
+            address1: address,
+            address2: dealer.addressObj.address,
+        };
+        const addedChannel = await channelManager.addChannel(channelObj);
+        if (!addedChannel.data || addedChannel.error) return;
+        return addedChannel.data;
     }
 }
 
 const buildTokenTokenTrade = async (tradeInfo) => {
     console.log('Building Token Token Trade!');
-    const { address } = tradeInfo;
-    const channel = await findOrCreateChannel(address);
-    console.log(channel);
+    const selectedChannel = await findOrCreateChannel(tradeInfo);
+    console.log(selectedChannel);
+    
 };
 
 const buildLtcInstantTrade = async (tradeInfo) => {

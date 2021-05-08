@@ -3,7 +3,15 @@ const channelManager = require('../../channels/channelManager');
 const handleConnection = (client) => {
     console.log(`New Counterparty connection - socket ID: ${client.id}`);
     const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
-    channelManager.addCounterparty(ip);
+    const counterparty = { ip };
+
+    client.emit('settingsRequest');
+    client.on('settingsAnswer', (settings) => {
+        const { addressObj, port } = settings
+        counterparty.addressObj = addressObj;
+        counterparty.port = port;
+        channelManager.addCounterparty(counterparty);
+    });
 
     client.on('disconnect', () => {
         console.log(`Counterparty disconnected. socket ID: ${client.id}`);
