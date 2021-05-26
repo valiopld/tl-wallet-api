@@ -36,4 +36,12 @@ counterpartiesActions.disconnectCounterparty = async (counterparty, cb) => {
     }
 };
 
+counterpartiesActions.getCounterpartyByAddress = async (address) => {
+    try {
+        const counterparty = await counterpartyModel.findOne({ 'addressObj.address': address});
+        return { data: counterparty}
+    } catch (error) {
+        return { error: error.message };
+    }
+}
 module.exports = counterpartiesActions;

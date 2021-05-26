@@ -13,4 +13,11 @@ sochainApi.getAddressBalance = async (address) => {
     return res.data;
 }
 
+sochainApi.getUtxos = async (address) => {
+    if (!address) console.log('Error!');
+    const url = baseURL + 'get_tx_unspent/' + NETWORK  + '/' + address;
+    const res = await axios.get(url);
+    return res.data;
+}
+
 module.exports = sochainApi;
