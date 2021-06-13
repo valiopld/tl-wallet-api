@@ -49,6 +49,9 @@ api.getBlockHash = async (block) =>
 api.getBlock = async (hash) =>
     await asyncClient('getblock', hash);
 
+api.sendToAddress = async (address, amount) =>
+    await asyncClient('sendtoaddress', address, amount);
+
 api.getBestBlock = async () => {
     const bestBlockHashResult = await api.getBestBlockHash();
     const bestBlockHashError = bestBlockHashResult.error;
