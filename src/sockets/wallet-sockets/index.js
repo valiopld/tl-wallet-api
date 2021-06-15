@@ -63,7 +63,10 @@ const getCounterParties = (tradeConf) => {
     return new Promise((res, rej) => {
         const counterpartiesList = channelManager.getCounterparties(true, (result) => {
             const { data, error } = result;
-            if (error || !data) return console.log(error || 'There is problem with listing Counterparties');
+            if (error || !data) {
+                rej('There is problem with listing Counterparties');
+                return console.log(error || 'There is problem with listing Counterparties');
+            }
             res(data)
         });
     });
