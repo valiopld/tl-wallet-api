@@ -44,7 +44,7 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
        clientSocket.emit('CHANNEL_PUB_KEY', tradeConf.cpPubkey);
 
        clientSocket.on("MULTYSIG_DATA", (msData_client) => {
-        if (JSON.stringify(msData_cp) !== JSON.stringify(msData_client)) {
+        if (msData_cp.redeemScript !== msData_client.redeemScript) {
             clientSocket.emit('TRADE_REJECTION', `Multisig Data is not same on both side`);
             return;
         }
@@ -61,8 +61,8 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
     cpSocket.emit('RAWTX_FOR_SIGNING', rawHex)
    })
 
-   cpSocket.on('SIGNED_RAWTX', (signedRawTx) => {
-       clientSocket.emit("SIGNED_RAWTX", signedRawTx);
+   cpSocket.on('SIGNED_RAWTX', (signData) => {
+       clientSocket.emit("SIGNED_RAWTX", signData);
    })
 }
 
