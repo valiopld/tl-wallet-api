@@ -52,7 +52,7 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
         cpSocket.emit('COMMIT_TO_CHANNEL', commitData);
         cpSocket.on('COMMIT_TX', (cpCommitTx) => {
             clientSocket.emit('COMMIT_TX', {tradeConf, cpCommitTx});
-        }
+        })
     })
    });
 
