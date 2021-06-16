@@ -41,7 +41,7 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
    });
 
    cpSocket.on("MULTYSIG_DATA", (msData_cp) => {
-       clientSocket.emit('CHANNEL_PUB_KEY', tradeConf.cpAddress);
+       clientSocket.emit('CHANNEL_PUB_KEY', tradeConf.cpPubkey);
 
        clientSocket.on("MULTYSIG_DATA", (msData_client) => {
         if (JSON.stringify(msData_cp) !== JSON.stringify(msData_client)) {
@@ -52,7 +52,7 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
         cpSocket.emit('COMMIT_TO_CHANNEL', commitData);
         cpSocket.on('COMMIT_TX', (cpCommitTx) => {
             clientSocket.emit('COMMIT_TX', {tradeConf, cpCommitTx});
-        })
+        }
     })
    });
 
