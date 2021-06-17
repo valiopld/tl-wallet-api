@@ -34,6 +34,10 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
        console.log(`Trade Rejected! ${reason}`)
    });
 
+   cpSocket.on('connect_error', () => {
+    clientSocket.emit('TRADE_REJECTION', `Connection Fail`);
+   });
+
    cpSocket.on('TERMINATE_TRADE', (reason) => {
         clientSocket.emit('TRADE_REJECTION', reason);
         console.log(`Trade Rejected! ${reason}`)
