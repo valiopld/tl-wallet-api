@@ -17,7 +17,7 @@ const CLIENT_EVENTS =  {
     }
 }
 const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
-   const cpSocket = socket.io(`http://${counterpartyConnection}`);
+   const cpSocket = socket.io(`http://${counterpartyConnection}`, {reconnection: false, timestampRequests: 1000});
     const { propIdDesired, amountDeisred, amountForSale, clientPubKey, clientAddress } = tradeConf;
    const trade = {
        type: "LTC_INSTANT_TRADE",
@@ -41,6 +41,7 @@ const ltcInstantTrade = (tradeConf, clientSocket, counterpartyConnection) => {
    });
 
    cpSocket.on("MULTYSIG_DATA", (msData_cp) => {
+       console.log({msData_cp})
        clientSocket.emit('CHANNEL_PUB_KEY', tradeConf.cpPubkey);
 
        clientSocket.on("MULTYSIG_DATA", (msData_client) => {
