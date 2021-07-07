@@ -1,9 +1,11 @@
 const channelManager = require('../../channels/channelManager');
 const ltcInstantTrade = require('../../trade-builder').ltcInstantTrade;
+const tokenTokenTrade = require('../../trade-builder').tokenTokenTrade;
 const api = require('../../services/tl-rpc-api');
 
 const socketOnEvents = {
     LTC_INSTANT_TRADE: 'LTC_INSTANT_TRADE',
+    TOKEN_TOKEN_TRADE: 'TOKEN_TOKEN_TRADE',
 }
 
 const socketEmitEvents = {
@@ -15,7 +17,25 @@ const handleConnection = (client) => {
 
     client.on('disconnect', () => console.log(`Client disconnected. socket ID: ${client.id}`));
     client.on(socketOnEvents.LTC_INSTANT_TRADE, (tradeConf) => handleLTCInstantTrade(tradeConf, client));
+    client.on(socketOnEvents.TOKEN_TOKEN_TRADE, (tradeConf) => handleTokenTokenTrade(tradeConf, client));
+
 };
+
+const handleTokenTokenTrade = async (tradeConf, client) => {
+    ['MULTYSIG_DATA', 'RAW_HEX']
+        .forEach((e) => client.removeAllListeners(e));
+    const counterparties = await getCounterParties(tradeConf);
+    if (!counterparties || !counterparties.length) {
+        client.emit(socketEmitEvents.TRADE_REJECTION, 'No Counterperties Founds!');
+        console.log('No Counterparties Found!')
+    } else {
+        const counterparty = counterparties[0];
+        tradeConf.cpPubkey = counterparty.addressObj.publicKey;
+        tradeConf.cpAddress = counterparty.addressObj.address;
+        const counterpartyConnection = `${counterparty.ip}:${counterparty.port}`;
+        tokenTokenTrade(tradeConf, client, counterpartyConnection)
+    }
+}
 
 const handleLTCInstantTrade = async (tradeConf, client) => {
     ['MULTYSIG_DATA', 'RAW_HEX']

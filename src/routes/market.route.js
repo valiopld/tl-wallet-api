@@ -44,24 +44,14 @@ const getAvailableMarkets = () => {
     const usdIcon = 'https://cdn0.iconfinder.com/data/icons/mobile-device/512/dollar-usd-round-keyboard-money-usa-latin-2-512.png';
     const allIcon = 'https://cdn.discordapp.com/attachments/749975407838888058/817037799739490344/ALLFancyLogo.png';
     const ltcMartkets = [
-        // new Market(woodenToken, ltcToken),
-        // new Market(goldToken, ltcToken),
-        // new Market(lihkiToken, ltcToken),
-        // new Market(testToken1, ltcToken),
-        // new Market(testToken2, ltcToken),
-        // new Market(danToken, ltcToken),
         new Market(wBtcToken, ltcToken),
         new Market(wEthToken, ltcToken),
     ];
 
     const usdMarkets = [];
     const allMarkets = [
-        new Market(woodenToken, allToken),
-        new Market(goldToken, allToken),
-        new Market(lihkiToken, allToken),
-        new Market(testToken1, allToken),
-        new Market(testToken2, allToken),
-        new Market(danToken, allToken),
+        new Market(wBtcToken, wEthToken),
+        new Market(wEthToken, wBtcToken),
     ];
 
     const ltcMarketType = new MarketType('LTC', ltcMartkets, ltcIcon);
