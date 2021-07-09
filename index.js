@@ -13,7 +13,7 @@ routes.configureRoutes(app);
 const socketsService = require('./src/sockets');
 const { walletSocketsService, tradeChannelsSocketsService } = socketsService;
 walletSocketsService.connect();
-tradeChannelsSocketsService.connect();
+// tradeChannelsSocketsService.connect();
 
 const listernCB = () => console.log(`Server Started on port ${SERVER_PORT}`)
 app.listen(SERVER_PORT, listernCB);

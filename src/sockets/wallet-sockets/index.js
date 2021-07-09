@@ -16,8 +16,13 @@ const handleConnection = (client) => {
     console.log(`New Client Connected! ID: ${client.id}`);
 
     client.on('disconnect', () => console.log(`Client disconnected. socket ID: ${client.id}`));
-    client.on(socketOnEvents.LTC_INSTANT_TRADE, (tradeConf) => handleLTCInstantTrade(tradeConf, client));
-    client.on(socketOnEvents.TOKEN_TOKEN_TRADE, (tradeConf) => handleTokenTokenTrade(tradeConf, client));
+    client.on('dealer-data', (dealerData) => {
+        const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
+        console.log({dealerData, ip});
+    });
+
+    // client.on(socketOnEvents.LTC_INSTANT_TRADE, (tradeConf) => handleLTCInstantTrade(tradeConf, client));
+    // client.on(socketOnEvents.TOKEN_TOKEN_TRADE, (tradeConf) => handleTokenTokenTrade(tradeConf, client));
 
 };
 
