@@ -20,6 +20,7 @@ const handleConnection = (io) => {
     
         client.on('disconnect', () => {
             orderBooksService.clearOrderbooksFromIp(ip);
+            io.emit('aksfor-orderbook-update');
             console.log(`Client disconnected. socket ID: ${client.id}, IP: ${ip}`);
         });
 
@@ -36,7 +37,7 @@ const handleConnection = (io) => {
             console.log('new Dealer Data');
             const { tradesData, addressPair } = dealerData;
             orderBooksService.addToDealersData(ip, addressPair, tradesData);
-            emitOrderbookData(io, clientOptions.orderbookMarketFilter);
+            io.emit('aksfor-orderbook-update');
         });
     }
 };
