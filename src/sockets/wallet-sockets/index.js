@@ -44,8 +44,9 @@ const handleConnection = (io) => {
 
 const emitOrderbookData = (socket, marketFilter) => {
     if (!marketFilter) return;
-    const orderbookData = convertDealersData(orderBooksService.allDataByDealers);
-    const filteredData = filterOrderBookData(orderbookData, marketFilter);
+    // const orderbookData = orderBooksService.convertDealersData();
+    const data = orderBooksService.getAllDealersData();
+    const filteredData = filterOrderBookData(data, marketFilter);
     socket.emit('orderbook-data', filteredData);
 };
 
@@ -57,13 +58,6 @@ const filterOrderBookData = (data, filter) => {
         (ob.propIdForSale === secondId && ob.propIdDesired === firstId)
     ));
 };
-
-const convertDealersData = (rawData) => {
-    const convertedData = [];
-    const d1 = Object.values(rawData);
-    d1.forEach(d => d.forEach(_d => _d.tradesData.forEach(__d => convertedData.push(__d))));
-    return convertedData;
-}
 
 const blockCounter = (io) => {
     let oldHeight = 0;

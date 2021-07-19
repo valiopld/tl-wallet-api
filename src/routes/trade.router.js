@@ -1,6 +1,18 @@
 const express = require('express');
 const { tradeBuilder } = require('../services');
+const { findDealerByTrade } = require('../services/orderbooks');
 const tradeRouter = express.Router();
+
+tradeRouter.get('/getDealer', async (req, res) => {
+    try {
+        const trade = JSON.parse(req.query.trade);
+        if (!trade) res.send({error: 'No request Provided'});
+        const dealer = findDealerByTrade(trade);
+        res.send({ data: dealer })
+    } catch(error) {
+        res.send({ error: error.message });
+    }
+});
 
 tradeRouter.get('/newTrade', async (req, res) => {
     try {
