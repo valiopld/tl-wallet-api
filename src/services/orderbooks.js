@@ -37,12 +37,6 @@ const findDealerByTrade = (trade) => {
     return null
 };
 
-// const convertDealersData = () => {
-//     const convertedData = [];
-//     const d1 = Object.values(allDataByDealers);
-//     d1.forEach(d => d.forEach(_d => _d.tradesData.forEach(__d => convertedData.push(__d))));
-//     return convertedData;
-// }
 
 const getAllDealersData = () => {
     return allDataByDealers;
@@ -54,5 +48,4 @@ module.exports = {
     clearOrderbooksFromIp,
     findDealerByTrade,
     getAllDealersData,
-    // convertDealersData,
 }

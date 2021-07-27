@@ -6,9 +6,8 @@ const socketIoConfig = {
   }
 };
 const config = {
-    SERVER_PORT: process.env.SERVER_PORT || 3002,
-    SOCKET_PORT: process.env.SOCKET_PORT || 75,
-    TC_SOCKET_PORT: process.env.TC_SOCKET_PORT || 69,
+  SERVER_PORT: process.env.SERVER_PORT || 3002,
+  SOCKET_PORT: process.env.SOCKET_PORT || 75,
     NETWORK: process.env.NETWORK || "LTCTEST",
 
     RPC_USER: process.env.RPC_USER,
@@ -18,7 +17,6 @@ const config = {
 
     DB_HOST: process.env.DB_HOST,
     DB_NAME: process.env.DB_NAME,
-
     socketIoConfig,
 };
 
