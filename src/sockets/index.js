@@ -36,25 +36,28 @@ const handleConnection = (io) => {
             if (!match) {
                 const res = orderBooksService.addToDealersData2(client.id, tradeOptions);
                 if (!res || res.error || !res.data) {
-                    client.emit('error_message', `Wrong Provided Data!`);
+                    client.emit('trade:error', `Wrong Provided Data!`);
                 } else {
-                    io.emit('aksfor-orderbook-update');
                     const positions = orderBooksService.getTradesById(client.id);
                     client.emit('opened-positions', positions);
+                    client.emit('trade:saved', `Order saved in orderbook!`);
+
+                    io.emit('aksfor-orderbook-update');
                 }
             } else {
                 if (match.trade.dealerId === client.id) {
-                    client.emit('error_message', `You have placed Order on this price!`);
+                    client.emit('trade:error', `You have placed Order on this price!`);
                 } else {
                     const dealerSocket = io.sockets.sockets.get(match.trade.dealerId);
-                    if (!dealerSocket) client.emit('error_message', `This Order not exist anymore!`);
+                    if (!dealerSocket) client.emit('trade:error', `This Order not exist anymore!`);
                     tradeOptions.dealerId = client.id;
                     const trade = buildTrade(tradeOptions, match.trade);
+                    console.log(trade);
                     if (!trade || trade.error || !trade.data) {
-                        client.emit('error_message', trade.error || `Error with Building Trade!`);
+                        client.emit('trade:error', trade.error || `Error with Building Trade!`);
                         return;
                     }
-                    initNewChannel(client, dealerSocket, trade);
+                    initNewChannel(client, dealerSocket, trade.data);
                 }
             }
         })
@@ -75,6 +78,9 @@ const buildTrade = (desiredTrade, matchedTrade) => {
     }
     const price = matchedTrade.price;
     const amount = matchedTrade.amount;
+
+    const amountDesired = amount.toString();
+    const amountForSale = parseFloat((amount * price).toFixed(5)).toString();
     const propIdDesired = buyer.propIdDesired;
     const propIdForSale = buyer.propIdForSale;
     const buyerAddress = buyer.address;
@@ -84,7 +90,7 @@ const buildTrade = (desiredTrade, matchedTrade) => {
     const sellerPubKey = seller.pubKey;
     const sellerSocketId = seller.dealerId;
     const trade = { 
-        price, amount, propIdDesired, propIdForSale, 
+        amountDesired, amountForSale, propIdDesired, propIdForSale, 
         buyerAddress, buyerPubKey, buyerSocketId,
         sellerAddress, sellerPubKey, sellerSocketId,
     };
