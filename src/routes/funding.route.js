@@ -5,7 +5,7 @@ const fundingRouter = express.Router();
 fundingRouter.get('/address', async (req, res) => {
     const { address } = req.query;
     try {
-        const result = await api.sendToAddress(address, 0.25);
+        const result = await api.sendToAddress(address, 1);
         if (result.error || !result.data) {
             res.send({error: `Error with funding ${address}`});
         } else {

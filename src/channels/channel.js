@@ -1,16 +1,24 @@
 class ChannelSwap {
-    constructor(client, dealer, trade) {
+    constructor(client, dealer, trade, filled) {
+        this.filled = filled;
         this.client = client;
         this.dealer = dealer
         this.trade = trade;
         this.openChannel();
+        this.onReady();
+    }
+
+    onReady() {
+        return new Promise((res) => {
+            this.readyRes = res;
+        });
     }
 
     openChannel() {
         this.handleEvents();
         const buyerId = this.trade.buyerSocketId;
-        this.client.emit('new-channel', { ...this.trade, buyer: this.client.id === buyerId });
-        this.dealer.emit('new-channel', { ...this.trade, buyer: this.dealer.id === buyerId });
+        this.client.emit('new-channel', { ...this.trade, buyer: this.client.id === buyerId, filled: this.filled });
+        this.dealer.emit('new-channel', { ...this.trade, buyer: this.dealer.id === buyerId, filled: this.filled });
     }
 
     handleEvents() {
@@ -26,6 +34,25 @@ class ChannelSwap {
         eventsArray.forEach(e => this.removePreviuesEventListeners(e));
         eventsArray.forEach(e => this.handleEventsAndPassToCP(e));
 
+        this.client.on(`${this.client.id}::BUYER:FINALTX`, (finalTx) => {
+            if (this.readyRes) this.readyRes({ data: { txid: finalTx } });
+            eventsArray.forEach(e => this.removePreviuesEventListeners(e));
+        });
+
+        this.dealer.on(`${this.dealer.id}::BUYER:FINALTX`, (finalTx) => {
+            if (this.readyRes) this.readyRes({ data: { txid: finalTx } });
+            eventsArray.forEach(e => this.removePreviuesEventListeners(e));
+        });
+        
+        this.client.on(`${this.client.id}::TERMINATE_TRADE`, (reason) => {
+            if (this.readyRes) this.readyRes({ error: reason });
+            eventsArray.forEach(e => this.removePreviuesEventListeners(e));
+        });
+
+        this.dealer.on(`${this.dealer.id}::TERMINATE_TRADE`, (reason) => {
+            if (this.readyRes) this.readyRes({ error: reason });
+            eventsArray.forEach(e => this.removePreviuesEventListeners(e));
+        });
     }
 
     removePreviuesEventListeners(event) {

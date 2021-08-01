@@ -56,7 +56,7 @@ const getAvailableMarkets = () => {
 
     const ltcMarketType = new MarketType('LTC', ltcMartkets, ltcIcon);
     const usdMarketType = new MarketType('USD', usdMarkets, usdIcon, true);
-    const allMarketType = new MarketType('ALL', allMarkets, allIcon);
+    const allMarketType = new MarketType('ALL', allMarkets, allIcon, true);
     return [ ltcMarketType, usdMarketType, allMarketType ];
 }
 
