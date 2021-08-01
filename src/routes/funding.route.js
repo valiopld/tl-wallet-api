@@ -9,7 +9,7 @@ fundingRouter.get('/address', async (req, res) => {
         if (result.error || !result.data) {
             res.send({error: `Error with funding ${address}`});
         } else {
-            res.send({data: `${address} is funded with: 0.25 tLTC`});
+            res.send({data: `${address} is funded with: 1 tLTC`});
         }
     } catch (err) {
         res.send({error: `Error with funding ${address}`});
