@@ -1,8 +1,24 @@
 const orderBooksService = require('../services/orderbooks');
 const ChannelSwap = require('../channels/channel').ChannelSwap;
 
+const reqVersions = {
+    nodeVersion: '0.1.0',
+    walletVersion: '0.1.0',
+};
+
 const handleConnection = (io) => {
     return (client) => {
+        client.on('check-versions', (versions) => {
+            console.log({versions})
+            const reqWalletVersion = reqVersions.walletVersion;
+            const reqNodeVersion = reqVersions.nodeVersion;
+
+            const walletVersion = versions.walletVersion;
+            const nodeVersion = versions.nodeVersion;
+
+            const valid = reqWalletVersion === walletVersion && reqNodeVersion === nodeVersion;
+            client.emit('version-guard', valid);
+        });
         const clientOptions = {};
         // const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
         console.log(`New Client Connected! ID: ${client.id}`);
@@ -103,10 +119,11 @@ const buildTrade = (desiredTrade, matchedTrade) => {
     const sellerAddress = seller.address;
     const sellerPubKey = seller.pubKey;
     const sellerSocketId = seller.dealerId;
+    const secondSocketId = desiredTrade.dealerId;
     const trade = { 
         amountDesired, amountForSale, propIdDesired, propIdForSale, 
         buyerAddress, buyerPubKey, buyerSocketId,
-        sellerAddress, sellerPubKey, sellerSocketId,
+        sellerAddress, sellerPubKey, sellerSocketId, secondSocketId,
     };
     return { data: trade };
 }
