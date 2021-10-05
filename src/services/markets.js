@@ -80,7 +80,7 @@ const getAvailableSpotMarkets = () => {
 
     const ltcMarketType = new SpotMarketType('LTC', ltcMartkets, ltcIcon);
     const usdMarketType = new SpotMarketType('USD', usdMarkets, usdIcon, true);
-    const allMarketType = new SpotMarketType('ALL', allMarkets, allIcon);
+    const allMarketType = new SpotMarketType('ALL', allMarkets, allIcon, true);
     return [ ltcMarketType, usdMarketType, allMarketType ];
 }
 

@@ -18,6 +18,7 @@ const handleConnection = (io) => {
 
             const valid = reqWalletVersion === walletVersion && reqNodeVersion === nodeVersion;
             client.emit('version-guard', valid);
+            if (!valid) client.disconnect();
         });
         const clientOptions = {};
         // const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
@@ -128,9 +129,24 @@ const buildTrade = (desiredTrade, matchedTrade) => {
     return { data: trade };
 }
 
+const saveLog = (obj) => {
+    try {
+        const fs = require('fs');
+        const obj2 = JSON.stringify(obj, null, 4);
+        fs.appendFile('./test.log', `${obj2} \n`, (err) => {
+            if (err) console.log({error: err});
+        });
+    } catch(error) {
+        console.log({error});
+    }
+};
+
 const initNewChannel = async (client, dealer, trade, filled) => {
+    const startTime = Date.now();
     const channel = new ChannelSwap(client, dealer, trade, filled);
     const res = await channel.onReady();
+    const endTime = Date.now();
+    saveLog({ ...res, durationMs:  endTime - startTime });
     const clientPositions = orderBooksService.getTradesById(client.id);
     client.emit('opened-positions', clientPositions);
     const dealerPositions = orderBooksService.getTradesById(dealer.id);
