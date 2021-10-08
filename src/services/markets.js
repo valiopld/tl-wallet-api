@@ -46,16 +46,10 @@ class Token {
 }
 
 const allToken = new Token('ALL', 'ALL', 1);
-const ltcToken = new Token('LTC', 'LTC', 999);
+const ltcToken = new Token('LTC', 'LTC', -1);
 
-const woodenToken = new Token('WDN', 'Wooden Token', 4);
-const goldToken = new Token('GLD', 'Gold Token', 5);
-const lihkiToken = new Token('LHK', 'Lihki Token', 6);
-const testToken1 = new Token('TT1', 'Test Token 1', 7);
-const testToken2 = new Token('TT2', 'Testo Token 2', 8);
-const danToken = new Token('DAN', 'Dan Token', 9 );
-const wBtcToken = new Token('WBTC', 'Wrapped BTC', 10);
-const wEthToken = new Token('WETH', 'Wrapped ETH', 11);
+const wBtcToken = new Token('WBTC', 'Wrapped BTC', 4);
+const wEthToken = new Token('WETH', 'Wrapped ETH', 5);
 
 const btcContractPart = new Token('BTC', 'bitcoin', 0);
 const usdContractPart = new Token('USD', 'United State Dollar', 0);
