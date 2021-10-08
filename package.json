@@ -4,7 +4,8 @@
   "description": "TradeLayer Wallet Api",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "start:prod": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
