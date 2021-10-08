@@ -1,9 +1,10 @@
 const orderBooksService = require('../services/orderbooks');
 const ChannelSwap = require('../channels/channel').ChannelSwap;
+// const api = require('../services/tl-rpc-api');
 
 const reqVersions = {
-    nodeVersion: '0.1.0',
-    walletVersion: '0.1.0',
+    nodeVersion: '0.1.1',
+    walletVersion: '0.1.1',
 };
 
 const handleConnection = (io) => {
@@ -129,24 +130,37 @@ const buildTrade = (desiredTrade, matchedTrade) => {
     return { data: trade };
 }
 
-const saveLog = (obj) => {
-    try {
-        const fs = require('fs');
-        const obj2 = JSON.stringify(obj, null, 4);
-        fs.appendFile('./test.log', `${obj2} \n`, (err) => {
-            if (err) console.log({error: err});
-        });
-    } catch(error) {
-        console.log({error});
-    }
-};
+// const saveLog = async (obj) => {
+//     try {   
+//         const gifRes = await api.aClient('tl_getinfo');
+//         obj.block = gifRes.data.block || gifRes.error || 'Undifined Error getting Block';
+    
+//         const giRes = await api.aClient('tl_getvesting_info');
+//         obj['litecoin volume'] = giRes.data['litecoin volume'] || giRes.error || 'Undifined Error getting vest info';
+//         obj['vested percentage'] = giRes.data['vested percentage'] || giRes.error || 'Undifined Error getting vest info';
+//         obj['last vesting block'] = giRes.data['last vesting block'] || giRes.error || 'Undifined Error getting vest info';
+//         obj['total ALL minted'] = giRes.data['total ALL minted'] || giRes.error || 'Undifined Error getting vest info';
+//         obj['total vested'] = giRes.data['total vested'] || giRes.error || 'Undifined Error getting vest info';
+    
+//         const gapfiRes = await api.aClient('tl_getallbalancesforid', 1);
+//         obj.allBalances = gapfiRes.data || gapfiRes.error || 'Undifined Error getting all balances';
+
+//         const fs = require('fs');
+//         const obj2 = JSON.stringify(obj, null, 4);
+//         fs.appendFile('./test.log', `${obj2} \n`, (err) => {
+//             if (err) console.log({error: err});
+//         });
+//     } catch(error) {
+//         console.log({error});
+//     }
+// };
 
 const initNewChannel = async (client, dealer, trade, filled) => {
-    const startTime = Date.now();
+    // const startTime = Date.now();
     const channel = new ChannelSwap(client, dealer, trade, filled);
     const res = await channel.onReady();
-    const endTime = Date.now();
-    saveLog({ ...res, durationMs:  endTime - startTime });
+    // const endTime = Date.now();
+    // saveLog({ ...res, durationMs:  endTime - startTime });
     const clientPositions = orderBooksService.getTradesById(client.id);
     client.emit('opened-positions', clientPositions);
     const dealerPositions = orderBooksService.getTradesById(dealer.id);

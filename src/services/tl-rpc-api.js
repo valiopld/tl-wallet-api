@@ -19,6 +19,7 @@ const api = {};
 api.sendToAddress = async (address, amount) =>
     await asyncClient('sendtoaddress', address, amount);
 
+// api.aClient = asyncClient;
 const checkConenction = async () => {
     const tlgiRes = await asyncClient('tl_getinfo');
     const { error } = tlgiRes;
