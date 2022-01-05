@@ -34,6 +34,10 @@ const clearOrderbooksBySocketId = (dealerId) => {
     allDataByDealers = allDataByDealers.filter(trade => trade.dealerId !== dealerId);
 }
 
+const clearOrderbookByAddressAndId = (dealerId, address) => {
+    allDataByDealers = allDataByDealers.filter(trade => !(trade.dealerId === dealerId && trade.address === address));
+}
+
 const clearOrderbooksbyPubkey = (pubkey) => {
     allDataByDealers = allDataByDealers.filter(trade => trade.conn.pubkey !== pubkey);
 }
@@ -98,4 +102,5 @@ module.exports = {
     getTradesById,
     clearOrderbooksBySocketId,
     closePosition,
+    clearOrderbookByAddressAndId,
 }

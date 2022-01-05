@@ -48,8 +48,8 @@ class Token {
 const allToken = new Token('ALL', 'ALL', 1);
 const ltcToken = new Token('LTC', 'LTC', -1);
 
-const wBtcToken = new Token('WBTC', 'Wrapped BTC', 4);
-const wEthToken = new Token('WETH', 'Wrapped ETH', 5);
+const wBtcToken = new Token('WBTC', 'Wrapped BTC', 5);
+const wEthToken = new Token('WETH', 'Wrapped ETH', 4);
 
 const btcContractPart = new Token('BTC', 'bitcoin', 0);
 const usdContractPart = new Token('USD', 'United State Dollar', 0);
@@ -62,15 +62,12 @@ const dogeIcon = 'https://logos-download.com/wp-content/uploads/2018/04/DogeCoin
 
 const getAvailableSpotMarkets = () => {
     const ltcMartkets = [
-        new Market(wBtcToken, ltcToken),
         new Market(wEthToken, ltcToken),
+        new Market(allToken, ltcToken),
     ];
 
     const usdMarkets = [];
-    const allMarkets = [
-        new Market(wBtcToken, wEthToken),
-        // new Market(wEthToken, wBtcToken),
-    ];
+    const allMarkets = [];
 
     const ltcMarketType = new SpotMarketType('LTC', ltcMartkets, ltcIcon);
     const usdMarketType = new SpotMarketType('USD', usdMarkets, usdIcon, true);
@@ -84,8 +81,7 @@ const getAvailableFuturesMarkets = () => {
         new Contract(3, 'testbtcusd', btcContractPart, usdContractPart),
         new Contract(1, 'btcusd', usdContractPart, btcContractPart),
     ];
-    const btcContracts = [
-    ];
+    const btcContracts = [];
     const dogeContracts = [];
  
     const ltcMarketType = new FuturesMarketType('LTC', ltcContracts, ltcIcon);

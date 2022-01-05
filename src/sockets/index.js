@@ -3,8 +3,8 @@ const ChannelSwap = require('../channels/channel').ChannelSwap;
 // const api = require('../services/tl-rpc-api');
 
 const reqVersions = {
-    nodeVersion: '0.1.1',
-    walletVersion: '0.1.1',
+    nodeVersion: '0.0.1',
+    walletVersion: '0.0.1',
 };
 
 const handleConnection = (io) => {
@@ -26,10 +26,30 @@ const handleConnection = (io) => {
         console.log(`New Client Connected! ID: ${client.id}`);
     
         client.on('disconnect', () => {
-            // orderBooksService.clearOrderbooksFromIp(ip);
             orderBooksService.clearOrderbooksBySocketId(client.id);
             io.emit('aksfor-orderbook-update');
             console.log(`Client disconnected. socket ID: ${client.id}`);
+        });
+
+        client.on('logout', () => {
+            orderBooksService.clearOrderbooksBySocketId(client.id);
+            io.emit('aksfor-orderbook-update');
+        });
+
+        client.on('clean-by-address', (address) => {
+            orderBooksService.clearOrderbookByAddressAndId(client.id, address);
+            io.emit('aksfor-orderbook-update');
+            const positions = orderBooksService.getTradesById(client.id);
+            client.emit('opened-positions', positions);
+        });
+
+        client.on('add-many', (arrayData) => {
+            arrayData.forEach((tradeOptions) => {
+                initTrade(tradeOptions, client.id);
+            });
+            io.emit('aksfor-orderbook-update');
+            const positions = orderBooksService.getTradesById(client.id);
+            client.emit('opened-positions', positions);
         });
 
         client.on('orderbook-market-filter', (filter) => {
@@ -47,13 +67,6 @@ const handleConnection = (io) => {
             const positions = orderBooksService.getTradesById(client.id);
             client.emit('opened-positions', positions);
         });
-        // client.on('dealer-data', (dealerData) => {
-        //     console.log('new Dealer Data');
-        //     console.log(dealerData);
-        //     const { tradesData, addressPair } = dealerData;
-        //     orderBooksService.addToDealersData(socket.id, addressPair, tradesData);
-        //     io.emit('aksfor-orderbook-update');
-        // });
 
         client.on('init-trade', (tradeOptions) => initTrade(tradeOptions, client.id));
 
@@ -66,7 +79,7 @@ const handleConnection = (io) => {
                 } else {
                     const positions = orderBooksService.getTradesById(client.id);
                     client.emit('opened-positions', positions);
-                    client.emit('trade:saved', `Order saved in orderbook!`);
+                    client.emit('trade:saved', res);
 
                     io.emit('aksfor-orderbook-update');
                 }

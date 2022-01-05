@@ -2,6 +2,17 @@ const express = require('express');
 const { tradeBuilder } = require('../services');
 const { findDealerByTrade } = require('../services/orderbooks');
 const tradeRouter = express.Router();
+const orderBooksService = require('../services/orderbooks');
+
+tradeRouter.get('/ordersList', async (req,res) => {
+    try {
+        const { id } = req.query;
+        const positions = orderBooksService.getTradesById(id);
+        res.send({ data: positions });
+    } catch(error) {
+        res.send({ error: error.message })
+    }
+});
 
 tradeRouter.get('/getDealer', async (req, res) => {
     try {
