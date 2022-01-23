@@ -54,11 +54,14 @@ const handleConnection = (io) => {
 
         client.on('orderbook-market-filter', (filter) => {
             clientOptions.orderbookMarketFilter = filter;
-            emitOrderbookData(client, clientOptions.orderbookMarketFilter)
+            emitOrderbookData(client, clientOptions.orderbookMarketFilter);
+            emitTradeHistory(client, clientOptions.orderbookMarketFilter);
+
         });
 
         client.on('update-orderbook', () => {
-            emitOrderbookData(client, clientOptions.orderbookMarketFilter)
+            emitOrderbookData(client, clientOptions.orderbookMarketFilter);
+            emitTradeHistory(client, clientOptions.orderbookMarketFilter);
         });
 
         client.on('close-position', (position) => {
@@ -99,6 +102,7 @@ const handleConnection = (io) => {
                     }
 
                     const finalRes = await initNewChannel(client, dealerSocket, trade.data, !match.unfilled);
+                    io.emit('aksfor-orderbook-update');
                     if (match.unfilled) {
                         initTrade(match.unfilled);
                     }
@@ -168,10 +172,16 @@ const buildTrade = (desiredTrade, matchedTrade) => {
 //     }
 // };
 
+let tradeHistory = [];
+const saveToHistory = (trade) => {
+    tradeHistory = [...tradeHistory, trade].splice(0, 10);
+};
+
 const initNewChannel = async (client, dealer, trade, filled) => {
     // const startTime = Date.now();
     const channel = new ChannelSwap(client, dealer, trade, filled);
     const res = await channel.onReady();
+    if (res && res.data) saveToHistory({ ...channel.trade, txid: res.data.txid });
     // const endTime = Date.now();
     // saveLog({ ...res, durationMs:  endTime - startTime });
     const clientPositions = orderBooksService.getTradesById(client.id);
@@ -180,6 +190,15 @@ const initNewChannel = async (client, dealer, trade, filled) => {
     dealer.emit('opened-positions', dealerPositions);
     return res;
 }
+
+const emitTradeHistory = (socket, marketFilter) => {
+    if (!marketFilter) return;
+    const th = tradeHistory.filter(e => {
+        return true;
+    });
+    console.log({marketFilter, th});
+    socket.emit('trade-history', th);
+};
 
 const emitOrderbookData = (socket, marketFilter) => {
     if (!marketFilter) return;
