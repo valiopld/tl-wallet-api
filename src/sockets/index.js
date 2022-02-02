@@ -173,7 +173,7 @@ const buildTrade = (desiredTrade, matchedTrade) => {
 
 let tradeHistory = [];
 const saveToHistory = (trade) => {
-    tradeHistory = [...tradeHistory, trade].splice(0, 10);
+    tradeHistory = [trade, ...tradeHistory].splice(0, 10);
 };
 
 const initNewChannel = async (client, dealer, trade, filled) => {
