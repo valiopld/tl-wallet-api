@@ -3,21 +3,20 @@ const ChannelSwap = require('../channels/channel').ChannelSwap;
 // const api = require('../services/tl-rpc-api');
 
 const reqVersions = {
-    nodeVersion: '0.0.1',
-    walletVersion: '0.0.1',
+    nodeVersion: '0.0.2',
+    walletVersion: '0.0.2',
 };
 
 const handleConnection = (io) => {
     return (client) => {
         client.on('check-versions', (versions) => {
-            console.log({versions})
-            const reqWalletVersion = reqVersions.walletVersion;
-            const reqNodeVersion = reqVersions.nodeVersion;
+            const formatVersions = (stringVersion) => parseFloat(stringVersion.split('.').join(''));
+            const reqWalletVersion = formatVersions(reqVersions.walletVersion)
+            const reqNodeVersion = formatVersions(reqVersions.nodeVersion);
 
-            const walletVersion = versions.walletVersion;
-            const nodeVersion = versions.nodeVersion;
-
-            const valid = reqWalletVersion === walletVersion && reqNodeVersion === nodeVersion;
+            const walletVersion = formatVersions(versions.walletVersion);
+            const nodeVersion = formatVersions(versions.nodeVersion);
+            const valid = reqWalletVersion <= walletVersion && reqNodeVersion <= nodeVersion;
             client.emit('version-guard', valid);
             if (!valid) client.disconnect();
         });
@@ -194,9 +193,8 @@ const initNewChannel = async (client, dealer, trade, filled) => {
 const emitTradeHistory = (socket, marketFilter) => {
     if (!marketFilter) return;
     const th = tradeHistory.filter(e => {
-        return true;
+        return e.propIdDesired === marketFilter.firstId && e.propIdForSale === marketFilter.secondId;
     });
-    console.log({marketFilter, th});
     socket.emit('trade-history', th);
 };
 

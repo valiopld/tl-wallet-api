@@ -28,7 +28,6 @@ tradeRouter.get('/getDealer', async (req, res) => {
 tradeRouter.get('/newTrade', async (req, res) => {
     try {
         const { type, info } = req.query;
-        console.log({type, info});
     } catch(error) {
         res.send({ error: error.message });
     }
@@ -36,7 +35,7 @@ tradeRouter.get('/newTrade', async (req, res) => {
 
 tradeRouter.get('/cancleTrade', async (req, res) => {
     try {
-        console.log('Cancle Trade')
+        // console.log('Cancle Trade')
     } catch(error) {
         res.send({ error: error.message });
     }
@@ -44,7 +43,7 @@ tradeRouter.get('/cancleTrade', async (req, res) => {
 
 tradeRouter.get('/closeChannel', async (req, res) => {
     try {
-        console.log('Close Channel')
+        // console.log('Close Channel')
     } catch(error) {
         res.send({ error: error.message });
     }

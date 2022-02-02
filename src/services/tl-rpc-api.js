@@ -26,7 +26,6 @@ const checkConenction = async () => {
     const message = error
         ? `There is problem with LTC node connection !`
         : `Connected to the LTC node !`;
-    console.log(message);
 };
 
 checkConenction();
