@@ -3,8 +3,8 @@ const ChannelSwap = require('../channels/channel').ChannelSwap;
 // const api = require('../services/tl-rpc-api');
 
 const reqVersions = {
-    nodeVersion: '0.0.2',
-    walletVersion: '0.0.2',
+    nodeVersion: '0.0.3',
+    walletVersion: '0.0.3',
 };
 
 const handleConnection = (io) => {
