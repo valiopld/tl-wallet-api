@@ -2,24 +2,24 @@ const orderBooksService = require('../services/orderbooks');
 const ChannelSwap = require('../channels/channel').ChannelSwap;
 // const api = require('../services/tl-rpc-api');
 
-const reqVersions = {
-    nodeVersion: '0.0.3',
-    walletVersion: '0.0.3',
-};
+// const reqVersions = {
+//     nodeVersion: '0.0.3',
+//     walletVersion: '0.0.3',
+// };
 
 const handleConnection = (io) => {
     return (client) => {
-        client.on('check-versions', (versions) => {
-            const formatVersions = (stringVersion) => parseFloat(stringVersion.split('.').join(''));
-            const reqWalletVersion = formatVersions(reqVersions.walletVersion)
-            const reqNodeVersion = formatVersions(reqVersions.nodeVersion);
+        // client.on('check-versions', (versions) => {
+        //     const formatVersions = (stringVersion) => parseFloat(stringVersion.split('.').join(''));
+        //     const reqWalletVersion = formatVersions(reqVersions.walletVersion)
+        //     const reqNodeVersion = formatVersions(reqVersions.nodeVersion);
 
-            const walletVersion = formatVersions(versions.walletVersion);
-            const nodeVersion = formatVersions(versions.nodeVersion);
-            const valid = reqWalletVersion <= walletVersion && reqNodeVersion <= nodeVersion;
-            client.emit('version-guard', valid);
-            if (!valid) client.disconnect();
-        });
+        //     const walletVersion = formatVersions(versions.walletVersion);
+        //     const nodeVersion = formatVersions(versions.nodeVersion);
+        //     const valid = reqWalletVersion <= walletVersion && reqNodeVersion <= nodeVersion;
+        //     client.emit('version-guard', valid);
+        //     if (!valid) client.disconnect();
+        // });
         const clientOptions = {};
         // const ip = client.handshake.headers['x-forwarded-for'] || client.conn.remoteAddress.split(":")[3];
         console.log(`New Client Connected! ID: ${client.id}`);
